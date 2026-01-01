@@ -1,19 +1,19 @@
-module com.avereon.zerra {
+module com.acromere.zerra {
 
 	requires static lombok;
 	requires static org.jspecify;
 
-	requires com.avereon.zevra;
+	requires com.acromere.zevra;
 	requires javafx.controls;
 	requires javafx.swing;
 	requires image4j;
 
-	exports com.avereon.zerra.color;
-	exports com.avereon.zerra.event;
-	exports com.avereon.zerra.font;
-	exports com.avereon.zerra.image;
-	exports com.avereon.zerra.javafx;
-	exports com.avereon.zerra.stage;
-	exports com.avereon.zerra.theme;
-	exports com.avereon.zerra;
+	exports com.acromere.zerra.color;
+	exports com.acromere.zerra.event;
+	exports com.acromere.zerra.font;
+	exports com.acromere.zerra.image;
+	exports com.acromere.zerra.javafx;
+	exports com.acromere.zerra.stage;
+	exports com.acromere.zerra.theme;
+	exports com.acromere.zerra;
 }
