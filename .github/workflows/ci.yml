@@ -15,8 +15,10 @@ env:
 
   ACM_GPG_PASSWORD: ${{ secrets.ACM_GPG_PASSWORD }}
   ACM_KEYSTORE_PASSWORD: ${{ secrets.ACM_KEYSTORE_PASSWORD }}
-  ACM_REPO_USERNAME: ${{ secrets.ACM_REPO_USERNAME }}
-  ACM_REPO_PASSWORD: ${{ secrets.ACM_REPO_PASSWORD }}
+  ACM_MAVEN_REPO_USERNAME: ${{ secrets.ACM_MAVEN_REPO_USERNAME }}
+  ACM_MAVEN_REPO_PASSWORD: ${{ secrets.ACM_MAVEN_REPO_PASSWORD }}
+  ACM_XENON_REPO_USERNAME: ${{ secrets.ACM_XENON_REPO_USERNAME }}
+  ACM_XENON_REPO_PASSWORD: ${{ secrets.ACM_XENON_REPO_PASSWORD }}
 
   DISPLAY: ":99"
   GITHUB_REF: ${{ github.ref }}
@@ -31,10 +33,10 @@ jobs:
     timeout-minutes: 20
     steps:
       - name: Fetch sources
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
 
       - name: Fetch CI/CD resources
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
         with:
           repository: acromere/canoe
           path: .github
@@ -56,17 +58,12 @@ jobs:
           java-version: ${{env.JAVA_VERSION}}
 
       - name: Maven Repository Cache
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         with:
           path: ~/.m2/repository
           key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
           restore-keys: |
             ${{ runner.os }}-maven-
-
-      - name: Initialize CodeQL
-        uses: github/codeql-action/init@v3
-        with:
-          languages: java
 
       - name: Compile
         run: |
@@ -76,10 +73,7 @@ jobs:
         run: |
           mvn ${{env.MAVEN_PARMS}} test
 
-      - name: Perform CodeQL Analysis
-        uses: github/codeql-action/analyze@v3
-
-      - name: Deploy Arifacts
+      - name: Deploy Artifacts
         run: |
           mvn ${{env.MAVEN_PARMS}} deploy -Dmaven.test.skip=true
 
@@ -89,9 +83,9 @@ jobs:
 
       - name: Deploy JavaDoc
         run: |
-          ssh -t ${{env.ACM_REPO_USERNAME}}@acromere.com "mkdir -p ${{env.JAVADOC_DEPLOY_PATH}};"
+          ssh -t ${{env.ACM_XENON_REPO_USERNAME}}@acromere.com "mkdir -p ${{env.JAVADOC_DEPLOY_PATH}};"
           if [ $? -ne 0 ]; then exit 1; fi
-          scp -B target/${ACM_PRODUCT}-*-javadoc.jar ${{env.ACM_REPO_USERNAME}}@acromere.com:${{env.JAVADOC_DEPLOY_PATH}}/javadoc.jar 2>&1
+          scp -B target/${ACM_PRODUCT}-*-javadoc.jar ${{env.ACM_XENON_REPO_USERNAME}}@acromere.com:${{env.JAVADOC_DEPLOY_PATH}}/javadoc.jar 2>&1
           if [ $? -ne 0 ]; then exit 1; fi
-          ssh -t ${{env.ACM_REPO_USERNAME}}@acromere.com "mkdir -p ${{env.JAVADOC_TARGET_PATH}};rm -rf ${{env.JAVADOC_TARGET_PATH}}/*;unzip -o ${{env.JAVADOC_DEPLOY_PATH}}/javadoc.jar -d ${{env.JAVADOC_TARGET_PATH}}"
+          ssh -t ${{env.ACM_XENON_REPO_USERNAME}}@acromere.com "mkdir -p ${{env.JAVADOC_TARGET_PATH}};rm -rf ${{env.JAVADOC_TARGET_PATH}}/*;unzip -o ${{env.JAVADOC_DEPLOY_PATH}}/javadoc.jar -d ${{env.JAVADOC_TARGET_PATH}}"
           if [ $? -ne 0 ]; then exit 1; fi
