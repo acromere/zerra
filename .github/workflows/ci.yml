@@ -1,4 +1,4 @@
-name: Acromere Zerra CI
+name: Zerra CI
 
 on:
   push:
