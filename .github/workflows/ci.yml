@@ -86,6 +86,7 @@ jobs:
           path: target
 
   publish:
+    needs: build
     name: Publish
     runs-on: ubuntu-latest
     timeout-minutes: 5
@@ -144,8 +145,8 @@ jobs:
           ssh -t ${{env.ACM_XENON_REPO_USERNAME}}@acromere.com "mkdir -p ${{env.JAVADOC_TARGET_PATH}};rm -rf ${{env.JAVADOC_TARGET_PATH}}/*;unzip -o ${{env.JAVADOC_DEPLOY_PATH}}/javadoc.jar -d ${{env.JAVADOC_TARGET_PATH}}"
           if [ $? -ne 0 ]; then exit 1; fi
 
-
   trigger:
+    needs: publish
     name: Trigger
     runs-on: ubuntu-latest
     timeout-minutes: 5
