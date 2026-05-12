@@ -8,6 +8,10 @@ on:
   repository_dispatch:
     types: dependency-trigger
 
+permissions:
+  contents: read
+  pull-requests: read
+
 env:
   ACM_PRODUCT: "zerra"
   # The default release, should be overridden in config.sh
@@ -32,7 +36,7 @@ jobs:
   build:
     name: Build
     runs-on: ubuntu-latest
-    timeout-minutes: 20
+    timeout-minutes: 5
     steps:
       - name: Fetch sources
         uses: actions/checkout@v6
@@ -75,13 +79,61 @@ jobs:
         run: |
           mvn ${{env.MAVEN_PARMS}} test
 
+      - name: Upload Artifacts for Next Steps
+        uses: actions/upload-artifact@v6
+        with:
+          name: build
+          path: target
+
+  publish:
+    name: Publish
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    if: github.ref == 'refs/heads/main' && github.actor != 'dependabot[bot]'
+    steps:
+      - name: Fetch sources
+        uses: actions/checkout@v6
+
+      - name: Fetch CI/CD resources
+        uses: actions/checkout@v6
+        with:
+          repository: acromere/canoe
+          path: .github
+
+      - name: Configuration
+        shell: bash
+        run: |
+          source .github/config.sh
+
+      # Required to render the product icon
+      - name: Set up Virtual Display
+        run: |
+          Xvfb ${{env.DISPLAY}} ${{env.XVFB_PARMS}} &
+
+      - name: Set up Java
+        uses: actions/setup-java@v5
+        with:
+          distribution: ${{env.JAVA_DISTRO}}
+          java-version: ${{env.JAVA_VERSION}}
+
+      - name: Maven Repository Cache
+        uses: actions/cache@v5
+        with:
+          path: ~/.m2/repository
+          key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
+          restore-keys: |
+            ${{ runner.os }}-maven-
+
+      - name: Download Artifacts
+        uses: actions/download-artifact@v7
+        with:
+          name: build
+          path: target
+
       - name: Deploy Artifacts
         run: |
           mvn ${{env.MAVEN_PARMS}} deploy -Dmaven.test.skip=true
 
-      - name: Trigger Dependent Builds
-        run: |
-          curl -XPOST -u "${{secrets.ACM_CI_USERNAME}}:${{secrets.ACM_CI_PASSWORD}}" -H "Accept: application/vnd.github.v3+json" -H "Content-Type: application/json" https://api.github.com/repos/acromere/zenna/actions/workflows/ci.yml/dispatches --data '{"ref": "main"}'
 
       - name: Deploy JavaDoc
         run: |
@@ -91,3 +143,14 @@ jobs:
           if [ $? -ne 0 ]; then exit 1; fi
           ssh -t ${{env.ACM_XENON_REPO_USERNAME}}@acromere.com "mkdir -p ${{env.JAVADOC_TARGET_PATH}};rm -rf ${{env.JAVADOC_TARGET_PATH}}/*;unzip -o ${{env.JAVADOC_DEPLOY_PATH}}/javadoc.jar -d ${{env.JAVADOC_TARGET_PATH}}"
           if [ $? -ne 0 ]; then exit 1; fi
+
+
+  trigger:
+    name: Trigger
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    if: github.ref == 'refs/heads/main' && github.actor != 'dependabot[bot]'
+    steps:
+      - name: Trigger Dependent Builds
+        run: |
+          curl -XPOST -u "${{secrets.ACM_CI_USERNAME}}:${{secrets.ACM_CI_PASSWORD}}" -H "Accept: application/vnd.github.v3+json" -H "Content-Type: application/json" https://api.github.com/repos/acromere/zenna/actions/workflows/ci.yml/dispatches --data '{"ref": "main"}'
