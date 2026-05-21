@@ -66,35 +66,26 @@ public class Fx {
 	}
 
 	/**
-	 * Convenience method to ensure a runnable is executed on the FX thread.
+	 * Convenience method to run a Runnable on the FX thread if FX is available.
+	 * If not, run the Runnable on the current thread with the assumption that it
+	 * is not the FX thread.
+	 * <p/>
 	 * If the calling thread is already the FX thread, then this method simply
-	 * executes the runnable. Otherwise, it will delegate execution of the
-	 * runnable to the FX thread.
+	 * executes the runnable. If FX is running, it will delegate execution of the
+	 * runnable to the FX thread. If FX is not running, it will execute the
+	 * runnable on the current thread even if it is not the FX thread.
 	 *
 	 * @param runnable The runnable to execute
 	 */
 	public static void onFxOrCurrent( Runnable runnable ) {
 		if( isFxThread() ) {
 			runnable.run();
-		} else if( Fx.isRunning() ) {
-			Fx.run( runnable );
 		} else {
-			runnable.run();
-		}
-	}
-
-	/**
-	 * Convenience method to run a Runnable on the FX thread if FX is available.
-	 * If not, run the Runnable on the current thread with the assumption that it
-	 * is not the FX thread.
-	 *
-	 * @param runnable The runnable to execute
-	 */
-	public static void runOrOnCurrentThread( Runnable runnable ) {
-		if( Fx.isRunning() ) {
-			Fx.run( runnable );
-		} else {
-			runnable.run();
+			try {
+				Platform.runLater( runnable );
+			} catch( IllegalStateException exception ) {
+				runnable.run();
+			}
 		}
 	}
 
@@ -124,7 +115,7 @@ public class Fx {
 		try {
 			Platform.runLater( () -> {} );
 			return true;
-		} catch( IllegalStateException throwable ) {
+		} catch( Exception | Error throwable ) {
 			return false;
 		}
 	}
