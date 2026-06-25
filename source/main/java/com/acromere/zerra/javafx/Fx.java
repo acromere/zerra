@@ -155,9 +155,7 @@ public class Fx {
 	}
 
 	public static void waitForWithExceptions( long count, TimeUnit unit ) throws TimeoutException, InterruptedException {
-		for( int index = 0; index < count; index++ ) {
-			doWaitForWithExceptions( count, unit );
-		}
+		doWaitForWithExceptions( count, unit );
 	}
 
 	public static void waitForStability( long timeout ) {
