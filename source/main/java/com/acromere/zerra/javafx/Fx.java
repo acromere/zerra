@@ -14,7 +14,7 @@ import javafx.stage.Window;
 import lombok.CustomLog;
 
 import java.util.concurrent.Callable;
-import java.util.concurrent.Semaphore;
+import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 import java.util.concurrent.atomic.AtomicReference;
@@ -179,17 +179,15 @@ public class Fx {
 	private static void doWaitForWithExceptions( long count, TimeUnit unit ) throws TimeoutException, InterruptedException {
 		if( Fx.isFxThread() ) throw new IllegalStateException( "Attempt to wait on FX thread from FX thread" );
 
-		// Run the semaphore through the FX thread multiple times to ensure work is
-		// likely complete. We have had trouble with just one semaphore attempt.
-		for( int index = 0; index < 5; index++ ) {
-			Semaphore semaphore = new Semaphore( 0 );
-			Platform.runLater( semaphore::release );
-
-			// NOTE Thread.yield() is helpful but not consistent
-			//Thread.yield();
-
-			if( !semaphore.tryAcquire( count, unit ) ) throw new TimeoutException( "Timeout waiting for FX" );
+		// Run the latch through the FX thread multiple times to ensure work is
+		// likely complete. We have had trouble with just one latch attempt.
+		int latchCount = 5;
+		CountDownLatch latch = new CountDownLatch( latchCount );
+		for( int index = 0; index < latchCount; index++ ) {
+			Fx.run( latch::countDown );
+			ThreadUtil.pause( 1 );
 		}
+		if( !latch.await( count, unit ) ) throw new TimeoutException( "Timeout waiting for FX" );
 	}
 
 }
