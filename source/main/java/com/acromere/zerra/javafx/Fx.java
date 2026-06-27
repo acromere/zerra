@@ -181,10 +181,10 @@ public class Fx {
 
 		// Run the latch through the FX thread multiple times to ensure work is
 		// likely complete. We have had trouble with just one latch attempt.
-		int latchCount = 10;
+		int latchCount = 20;
 		CountDownLatch latch = new CountDownLatch( latchCount );
 		for( int index = 0; index < latchCount; index++ ) {
-			ThreadUtil.pause( 1 );
+			//ThreadUtil.pause( 1 );
 			Fx.run( latch::countDown );
 		}
 		if( !latch.await( count, unit ) ) throw new TimeoutException( "Timeout waiting for FX" );
