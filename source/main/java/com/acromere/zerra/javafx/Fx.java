@@ -179,7 +179,7 @@ public class Fx {
 	private static void doWaitForWithExceptions( long count, TimeUnit unit ) throws TimeoutException, InterruptedException {
 		if( Fx.isFxThread() ) throw new IllegalStateException( "Attempt to wait on FX thread from FX thread" );
 
-		Semaphore semaphore = new Semaphore( 0 );
+		Semaphore semaphore = new Semaphore( 1 );
 		Platform.runLater( semaphore::release );
 
 		// NOTE Thread.yield() is helpful but not consistent
