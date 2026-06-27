@@ -179,14 +179,8 @@ public class Fx {
 	private static void doWaitForWithExceptions( long timeout, TimeUnit unit ) throws TimeoutException, InterruptedException {
 		if( Fx.isFxThread() ) throw new IllegalStateException( "Attempt to wait on FX thread from FX thread" );
 
-		// Run the latch through the FX thread multiple times to ensure work is
-		// likely complete. We have had trouble with just one latch attempt.
-		int latchCount = 1;
-		CountDownLatch latch = new CountDownLatch( latchCount );
-		//for( int index = 0; index < latchCount; index++ ) {
-			//ThreadUtil.pause( 1 );
-			Fx.run( latch::countDown );
-		//}
+		CountDownLatch latch = new CountDownLatch( 1 );
+		Fx.run( latch::countDown );
 		if( !latch.await( timeout, unit ) ) throw new TimeoutException( "Timeout waiting for FX" );
 	}
 
