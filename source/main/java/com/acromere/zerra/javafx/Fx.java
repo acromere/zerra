@@ -184,8 +184,8 @@ public class Fx {
 		int latchCount = 10;
 		CountDownLatch latch = new CountDownLatch( latchCount );
 		for( int index = 0; index < latchCount; index++ ) {
-			Fx.run( latch::countDown );
 			ThreadUtil.pause( 1 );
+			Fx.run( latch::countDown );
 		}
 		if( !latch.await( count, unit ) ) throw new TimeoutException( "Timeout waiting for FX" );
 	}
