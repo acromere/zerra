@@ -181,7 +181,7 @@ public class Fx {
 
 		// Run the latch through the FX thread multiple times to ensure work is
 		// likely complete. We have had trouble with just one latch attempt.
-		int latchCount = 5;
+		int latchCount = 10;
 		CountDownLatch latch = new CountDownLatch( latchCount );
 		for( int index = 0; index < latchCount; index++ ) {
 			Fx.run( latch::countDown );
