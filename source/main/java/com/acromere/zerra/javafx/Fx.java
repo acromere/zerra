@@ -106,7 +106,7 @@ public class Fx {
 				exceptionReference.set( exception );
 			}
 		} );
-		Fx.waitFor( 1, TimeUnit.SECONDS );
+		Fx.waitForDangerously( 1, TimeUnit.SECONDS );
 		if( exceptionReference.get() != null ) throw exceptionReference.get();
 		return reference.get();
 	}
@@ -136,13 +136,24 @@ public class Fx {
 		return ((Node)event.getSource()).getScene().getWindow();
 	}
 
-	public static void waitFor( long timeout ) {
-		waitFor( timeout, TimeUnit.MILLISECONDS );
+	/**
+	 * Wait for the FX thread, ignoring any exceptions.
+	 *
+	 * @param timeout The number of milliseconds to wait
+	 */
+	public static void waitForDangerously( long timeout ) {
+		waitForDangerously( timeout, TimeUnit.MILLISECONDS );
 	}
 
-	public static void waitFor( long count, TimeUnit unit ) {
+	/**
+	 * Wait for the FX thread, ignoring any exceptions.
+	 *
+	 * @param count The time unit count
+	 * @param unit The time unit
+	 */
+	public static void waitForDangerously( long count, TimeUnit unit ) {
 		try {
-			doWaitForWithExceptions( count, unit );
+			doWaitFor( count, unit );
 		} catch( InterruptedException exception ) {
 			Thread.currentThread().interrupt();
 		} catch( TimeoutException ignore ) {
@@ -150,12 +161,12 @@ public class Fx {
 		}
 	}
 
-	public static void waitForWithExceptions( long timeout ) throws TimeoutException, InterruptedException {
-		waitForWithExceptions( timeout, TimeUnit.MILLISECONDS );
+	public static void waitFor( long timeout ) throws TimeoutException, InterruptedException {
+		waitFor( timeout, TimeUnit.MILLISECONDS );
 	}
 
-	public static void waitForWithExceptions( long count, TimeUnit unit ) throws TimeoutException, InterruptedException {
-		doWaitForWithExceptions( count, unit );
+	public static void waitFor( long count, TimeUnit unit ) throws TimeoutException, InterruptedException {
+		doWaitFor( count, unit );
 	}
 
 	public static void waitForStability( long timeout ) {
@@ -172,11 +183,11 @@ public class Fx {
 	 * @param plus The amount of time to wait after the FX thread completes.
 	 */
 	public static void waitForStability( long timeout, long plus ) {
-		waitFor( timeout, TimeUnit.MILLISECONDS );
+		waitForDangerously( timeout, TimeUnit.MILLISECONDS );
 		ThreadUtil.pause( plus );
 	}
 
-	private static void doWaitForWithExceptions( long timeout, TimeUnit unit ) throws TimeoutException, InterruptedException {
+	private static void doWaitFor( long timeout, TimeUnit unit ) throws TimeoutException, InterruptedException {
 		if( Fx.isFxThread() ) throw new IllegalStateException( "Attempt to wait on FX thread from FX thread" );
 
 		CountDownLatch latch = new CountDownLatch( 1 );

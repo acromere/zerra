@@ -25,7 +25,7 @@ public class FxTest extends FxPlatformTestCase {
 
 		// when
 		Fx.run( () -> reference.set( message ) );
-		Fx.waitForWithExceptions( 1, TimeUnit.SECONDS );
+		Fx.waitFor( 1, TimeUnit.SECONDS );
 
 		// then
 		assertThat( reference.get() ).isEqualTo( "Made it!" );
@@ -40,7 +40,7 @@ public class FxTest extends FxPlatformTestCase {
 
 		// when
 		Fx.run( (Runnable)() -> {throw new RuntimeException( exceptionMessage );} );
-		Fx.waitForWithExceptions( 1, TimeUnit.SECONDS );
+		Fx.waitFor( 1, TimeUnit.SECONDS );
 
 		// then
 		assertThat( handler.getThrowable().getMessage() ).isEqualTo( exceptionMessage );

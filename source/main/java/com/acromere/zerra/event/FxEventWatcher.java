@@ -49,7 +49,7 @@ public class FxEventWatcher <T extends Event> implements EventHandler<T> {
 
 	public void waitForEvent( EventType<? extends T> type ) throws InterruptedException, TimeoutException {
 		waitForEvent( type, timeout );
-		Fx.waitForWithExceptions( timeout );
+		Fx.waitFor( timeout );
 	}
 
 	@SuppressWarnings( "unused" )
