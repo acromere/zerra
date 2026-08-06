@@ -136,6 +136,32 @@ public class Fx {
 		return ((Node)event.getSource()).getScene().getWindow();
 	}
 
+	public static void waitFor( long timeout ) throws TimeoutException, InterruptedException {
+		waitFor( timeout, TimeUnit.MILLISECONDS );
+	}
+
+	public static void waitFor( long count, TimeUnit unit ) throws TimeoutException, InterruptedException {
+		doWaitFor( count, unit );
+	}
+
+	public static void waitForStability( long timeout ) throws TimeoutException, InterruptedException {
+		waitForStability( timeout, STABILITY_TIMEOUT );
+	}
+
+	/**
+	 * After experimentation, particularly with tab panes, it appears that there
+	 * are other threads in the system that are not the FX platform thread doing
+	 * work. This method waits for the FX thread to complete and then waits
+	 * for a specified amount of time to allow these other threads to complete.
+	 *
+	 * @param timeout The maximum time to wait for the FX thread to complete.
+	 * @param plus The amount of time to wait after the FX thread completes.
+	 */
+	public static void waitForStability( long timeout, long plus ) throws TimeoutException, InterruptedException {
+		waitFor( timeout, TimeUnit.MILLISECONDS );
+		ThreadUtil.pause( plus );
+	}
+
 	/**
 	 * Wait for the FX thread, ignoring any exceptions.
 	 *
@@ -159,32 +185,6 @@ public class Fx {
 		} catch( TimeoutException ignore ) {
 			// Intentionally ignore exception
 		}
-	}
-
-	public static void waitFor( long timeout ) throws TimeoutException, InterruptedException {
-		waitFor( timeout, TimeUnit.MILLISECONDS );
-	}
-
-	public static void waitFor( long count, TimeUnit unit ) throws TimeoutException, InterruptedException {
-		doWaitFor( count, unit );
-	}
-
-	public static void waitForStability( long timeout ) {
-		waitForStability( timeout, STABILITY_TIMEOUT );
-	}
-
-	/**
-	 * After experimentation, particularly with tab panes, it appears that there
-	 * are other threads in the system that are not the FX platform thread doing
-	 * work. This method waits for the FX thread to complete and then waits
-	 * for a specified amount of time to allow these other threads to complete.
-	 *
-	 * @param timeout The maximum time to wait for the FX thread to complete.
-	 * @param plus The amount of time to wait after the FX thread completes.
-	 */
-	public static void waitForStability( long timeout, long plus ) {
-		waitForDangerously( timeout, TimeUnit.MILLISECONDS );
-		ThreadUtil.pause( plus );
 	}
 
 	private static void doWaitFor( long timeout, TimeUnit unit ) throws TimeoutException, InterruptedException {
