@@ -155,11 +155,17 @@ public class Fx {
 	 * for a specified amount of time to allow these other threads to complete.
 	 *
 	 * @param timeout The maximum time to wait for the FX thread to complete.
-	 * @param plus The amount of time to wait after the FX thread completes.
+	 * @param buffer The amount of time to wait after the FX thread completes.
 	 */
-	public static void waitForStability( long timeout, long plus ) throws TimeoutException, InterruptedException {
+	public static void waitForStability( long timeout, long buffer ) throws TimeoutException, InterruptedException {
+		// Wait just a bit of time before submitting the FX wait token
+		ThreadUtil.pause( buffer );
+
+		// Submit the FX wait token
 		waitFor( timeout, TimeUnit.MILLISECONDS );
-		ThreadUtil.pause( plus );
+
+		// Wait just a bit of time after the FX wait token is released
+		ThreadUtil.pause( buffer );
 	}
 
 	/**
