@@ -159,13 +159,15 @@ public class Fx {
 	 */
 	public static void waitForStability( long timeout, long buffer ) throws TimeoutException, InterruptedException {
 		// Wait just a bit of time before submitting the FX wait token
-		ThreadUtil.pause( buffer );
+		ThreadUtil.pause( 10 );
 
-		// Submit the FX wait token
-		waitFor( timeout, TimeUnit.MILLISECONDS );
+		for( int index = 0; index < 10; index++ ) {
+			// Yield to other thread while doing FX work
+			Thread.yield();
 
-		// Wait just a bit of time after the FX wait token is released
-		ThreadUtil.pause( buffer );
+			// Submit the FX wait token
+			waitFor( timeout, TimeUnit.MILLISECONDS );
+		}
 	}
 
 	/**
