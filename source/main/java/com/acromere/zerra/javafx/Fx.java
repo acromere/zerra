@@ -162,8 +162,9 @@ public class Fx {
 		ThreadUtil.pause( 10 );
 
 		for( int index = 0; index < 10; index++ ) {
-			// Yield to other thread while doing FX work
+			// Yield and pause for other threads while doing FX work
 			Thread.yield();
+			ThreadUtil.pause( 1 );
 
 			// Submit the FX wait token
 			waitFor( timeout, TimeUnit.MILLISECONDS );
