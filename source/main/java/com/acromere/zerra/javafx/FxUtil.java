@@ -3,6 +3,7 @@ package com.acromere.zerra.javafx;
 import javafx.geometry.*;
 import javafx.scene.Node;
 import javafx.scene.Parent;
+import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.TreeItem;
 import javafx.scene.input.DragEvent;
@@ -207,6 +208,11 @@ public class FxUtil {
 
 	public static <T extends Node> T findById( Collection<? extends T> nodes, String id ) {
 		return nodes.stream().filter( n -> Objects.equals( n.getId(), id ) ).findFirst().orElse( null );
+	}
+
+	@SuppressWarnings( "unchecked" )
+	public static <T extends MenuItem> T findMenuItemById( MenuBar menuBar, String id ) {
+		return (T)findMenuItemById( menuBar.getMenus(), id );
 	}
 
 	public static <T extends MenuItem> T findMenuItemById( Collection<? extends T> nodes, String id ) {
