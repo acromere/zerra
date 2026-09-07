@@ -57,12 +57,24 @@ public class Fx {
 	}
 
 	/**
-	 * Convenience method to run a Runnable on the FX thread.
+	 * Convenience method to run a Runnable asynchronously on the FX thread.
 	 *
 	 * @param runnable The runnable to execute
 	 */
 	public static void run( Runnable runnable ) {
 		Platform.runLater( runnable );
+	}
+
+	/**
+	 * Convenience method to run a Runnable on the FX thread if the calling thread
+	 * is the FX thread. This is helpful when more UI code is intentionally needed
+	 * to be run on the FX thread.
+	 *
+	 * @param runnable The runnable to execute
+	 */
+	public static void runFxSync( Runnable runnable ) {
+		affirmOnFxThread();
+		runnable.run();
 	}
 
 	/**
