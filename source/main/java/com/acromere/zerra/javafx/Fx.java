@@ -79,17 +79,17 @@ public class Fx {
 
 	/**
 	 * Convenience method to run a Runnable on the FX thread if FX is available.
-	 * If not, run the Runnable on the current thread with the assumption that it
-	 * is not the FX thread.
+	 * If not, run the Runnable on the current thread with the assumption that FX
+	 * is not available, and we are running headless.
 	 * <p/>
 	 * If the calling thread is already the FX thread, then this method simply
 	 * executes the runnable. If FX is running, it will delegate execution of the
 	 * runnable to the FX thread. If FX is not running, it will execute the
-	 * runnable on the current thread even if it is not the FX thread.
+	 * runnable on the current thread.
 	 *
 	 * @param runnable The runnable to execute
 	 */
-	public static void onFxOrCurrent( Runnable runnable ) {
+	public static void onFxOrHeadless( Runnable runnable ) {
 		if( isFxThread() ) {
 			runnable.run();
 		} else {
