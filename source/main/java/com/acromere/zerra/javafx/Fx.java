@@ -160,6 +160,10 @@ public class Fx {
 		waitForStability( timeout, STABILITY_TIMEOUT );
 	}
 
+	public static void waitForStability( long timeout, TimeUnit unit ) throws TimeoutException, InterruptedException {
+		waitForStability( timeout, unit, STABILITY_TIMEOUT );
+	}
+
 	/**
 	 * After experimentation, particularly with tab panes, it appears that there
 	 * are other threads in the system that are not the FX platform thread doing
@@ -170,16 +174,20 @@ public class Fx {
 	 * @param buffer The amount of time to wait after the FX thread completes.
 	 */
 	public static void waitForStability( long timeout, long buffer ) throws TimeoutException, InterruptedException {
+		waitForStability( timeout, TimeUnit.MILLISECONDS, buffer );
+	}
+
+	public static void waitForStability( long timeout, TimeUnit unit, long buffer ) throws TimeoutException, InterruptedException {
 		// Wait just a bit of time before submitting the FX wait token
-		ThreadUtil.pause( 10 );
+		ThreadUtil.pause( 10, TimeUnit.MILLISECONDS );
 
 		for( int index = 0; index < 10; index++ ) {
 			// Yield and pause for other threads while doing FX work
 			Thread.yield();
-			ThreadUtil.pause( 1 );
+			ThreadUtil.pause( 1, TimeUnit.MILLISECONDS );
 
 			// Submit the FX wait token
-			waitFor( timeout, TimeUnit.MILLISECONDS );
+			waitFor( timeout, unit );
 		}
 	}
 
