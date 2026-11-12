@@ -18,11 +18,23 @@ public class Colors {
 
 	public static final double BLUE_BRIGHTNESS_FACTOR = 0.11;
 
+	/**
+	 * Parse a string as a color.
+	 *
+	 * @param string The color string.
+	 * @return The color represented by the string, or null if the string is null.
+	 */
 	public static Color parse( String string ) {
 		if( string == null ) return null;
 		return Color.web( string );
 	}
 
+	/**
+	 * Convert a color to its hex string representation.
+	 *
+	 * @param color The color to convert.
+	 * @return The hex string representation of the color, or null if the color is null.
+	 */
 	public static String toString( Color color ) {
 		if( color == null ) return null;
 		int r = (int)Math.round( color.getRed() * 255.0 );
@@ -32,38 +44,59 @@ public class Colors {
 		return String.format( "#%02x%02x%02x%02x", r, g, b, o );
 	}
 
+	/**
+	 * Create an opaque version of the specified color.
+	 *
+	 * @param color The color to make opaque.
+	 * @return An opaque version of the color.
+	 */
 	public static Color opaque( Color color ) {
 		return new Color( color.getRed(), color.getGreen(), color.getBlue(), 1.0 );
 	}
 
+	/**
+	 * Create a translucent version of the specified color with a given factor.
+	 *
+	 * @param color The color to make translucent.
+	 * @param factor The transparency factor.
+	 * @return A translucent version of the color.
+	 */
 	public static Color translucent( Color color, double factor ) {
 		return new Color( color.getRed(), color.getGreen(), color.getBlue(), factor );
 	}
 
+	/**
+	 * Mix two colors with a given factor.
+	 *
+	 * @param color The base color.
+	 * @param mixer The mixer color.
+	 * @param factor The factor to mix with.
+	 * @return The mixed color.
+	 */
 	public static Color mix( Color color, Color mixer, double factor ) {
 		if( color == null || mixer == null ) return null;
-
+	
 		if( Color.TRANSPARENT.equals( color ) ) return translucent( mixer, factor );
 		if( Color.TRANSPARENT.equals( mixer ) ) return translucent( color, factor );
-
+	
 		factor = clamp( factor );
 		double mixFactor = 1 - factor;
-
+	
 		double colorR = color.getRed() * mixFactor;
 		double colorG = color.getGreen() * mixFactor;
 		double colorB = color.getBlue() * mixFactor;
 		double colorA = color.getOpacity() * mixFactor;
-
+	
 		double mixerR = mixer.getRed() * factor;
 		double mixerG = mixer.getGreen() * factor;
 		double mixerB = mixer.getBlue() * factor;
 		double mixerA = mixer.getOpacity() * factor;
-
+	
 		double r = colorR + mixerR;
 		double g = colorG + mixerG;
 		double b = colorB + mixerB;
 		double a = colorA + mixerA;
-
+	
 		return new Color( r, g, b, a );
 	}
 
@@ -206,10 +239,22 @@ public class Colors {
 		return Color.color( r, g, b, color.getOpacity() );
 	}
 
+	/**
+	 * Convert a Java AWT Color to a JavaFX Color.
+	 *
+	 * @param color The AWT color.
+	 * @return The equivalent FX color.
+	 */
 	public static java.awt.Color asAwtColor( javafx.scene.paint.Color color ) {
 		return new java.awt.Color( (float)color.getRed(), (float)color.getGreen(), (float)color.getBlue(), (float)color.getOpacity() );
 	}
 
+	/**
+	 * Convert a JavaFX Color to a Java AWT Color.
+	 *
+	 * @param color The FX color.
+	 * @return The equivalent AWT color.
+	 */
 	public static javafx.scene.paint.Color asFxColor( java.awt.Color color ) {
 		return javafx.scene.paint.Color.rgb( color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha() / 255.0 );
 	}
