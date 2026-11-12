@@ -75,28 +75,28 @@ public class Colors {
 	 */
 	public static Color mix( Color color, Color mixer, double factor ) {
 		if( color == null || mixer == null ) return null;
-	
+
 		if( Color.TRANSPARENT.equals( color ) ) return translucent( mixer, factor );
 		if( Color.TRANSPARENT.equals( mixer ) ) return translucent( color, factor );
-	
+
 		factor = clamp( factor );
 		double mixFactor = 1 - factor;
-	
+
 		double colorR = color.getRed() * mixFactor;
 		double colorG = color.getGreen() * mixFactor;
 		double colorB = color.getBlue() * mixFactor;
 		double colorA = color.getOpacity() * mixFactor;
-	
+
 		double mixerR = mixer.getRed() * factor;
 		double mixerG = mixer.getGreen() * factor;
 		double mixerB = mixer.getBlue() * factor;
 		double mixerA = mixer.getOpacity() * factor;
-	
+
 		double r = colorR + mixerR;
 		double g = colorG + mixerG;
 		double b = colorB + mixerB;
 		double a = colorA + mixerA;
-	
+
 		return new Color( r, g, b, a );
 	}
 

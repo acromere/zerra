@@ -9,9 +9,9 @@ import javafx.scene.paint.RadialGradient;
  * Utility class for parsing and converting various paint types.
  */
 public class Paints {
-	
+
 	private Paints() {}
-	
+
 	/**
 	 * Convert a Paint object to its string representation.
 	 *
@@ -27,7 +27,7 @@ public class Paints {
 			default -> throw new IllegalArgumentException( "Unknown paint type: " + paint.getClass().getName() );
 		};
 	}
-	
+
 	/**
 	 * Convert a Color to its string representation.
 	 *
@@ -38,7 +38,7 @@ public class Paints {
 		if( color == null ) return null;
 		return Colors.toString( color );
 	}
-	
+
 	/**
 	 * Convert a LinearGradient to its string representation.
 	 *
@@ -49,7 +49,7 @@ public class Paints {
 		if( gradient == null ) return null;
 		return gradient.toString();
 	}
-	
+
 	/**
 	 * Convert a RadialGradient to its string representation.
 	 *
@@ -60,7 +60,7 @@ public class Paints {
 		if( gradient == null ) return null;
 		return gradient.toString();
 	}
-	
+
 	/**
 	 * Parse a string into a Paint object.
 	 *
@@ -69,14 +69,14 @@ public class Paints {
 	 */
 	public static Paint parse( String string ) {
 		if( string == null ) return null;
-	
+
 		if( string.startsWith( "#" ) ) return Colors.parse( string );
 		if( string.startsWith( "linear-gradient" ) ) return LinearGradient.valueOf( string );
 		if( string.startsWith( "radial-gradient" ) ) return RadialGradient.valueOf( string );
-	
+
 		return Colors.parse( string );
 	}
-	
+
 	/**
 	 * Parse a string into a Paint object, returning null on exception.
 	 *
@@ -90,7 +90,7 @@ public class Paints {
 			return null;
 		}
 	}
-	
+
 	/**
 	 * Check if a paint is transparent.
 	 *
@@ -103,5 +103,5 @@ public class Paints {
 		if( paint instanceof Color color ) return Colors.isTransparent( color );
 		return false;
 	}
-	
+
 }
