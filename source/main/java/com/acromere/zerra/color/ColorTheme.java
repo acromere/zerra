@@ -3,6 +3,9 @@ package com.acromere.zerra.color;
 import javafx.scene.paint.Color;
 import lombok.Getter;
 
+/**
+ * Represents a color theme with a primary and a complementary color.
+ */
 @Getter
 public class ColorTheme {
 
@@ -10,6 +13,11 @@ public class ColorTheme {
 
 	private final Color complement;
 
+	/**
+	 * Creates a new ColorTheme with a primary color and its complement.
+	 *
+	 * @param color The primary color.
+	 */
 	public ColorTheme( Color color ) {
 		this.primary = color;
 		this.complement = getComplement( color, 180 );

@@ -9,6 +9,9 @@ import javafx.scene.paint.Paint;
 import javafx.scene.shape.Line;
 import javafx.scene.shape.Rectangle;
 
+/**
+ * A UI component that displays a swatch of a given paint.
+ */
 public class PaintSwatch extends Pane {
 
 	private final Pane background;
@@ -19,10 +22,18 @@ public class PaintSwatch extends Pane {
 
 	private ObjectProperty<Paint> paint;
 
+	/**
+	 * Creates a new PaintSwatch with no paint.
+	 */
 	public PaintSwatch() {
 		this( null );
 	}
 
+	/**
+	 * Creates a new PaintSwatch with the specified paint.
+	 *
+	 * @param paint The paint to display.
+	 */
 	public PaintSwatch( Paint paint ) {
 		getStyleClass().add( "paint-swatch" );
 
@@ -41,11 +52,9 @@ public class PaintSwatch extends Pane {
 		b.setFill( Color.LIGHTGREY );
 		b.xProperty().bind( background.widthProperty().multiply( 0.5 ) );
 		b.widthProperty().bind( background.widthProperty().multiply( 0.5 ) );
-		b.heightProperty().bind( background.heightProperty().multiply( 0.5 ) );
 		c.setFill( Color.LIGHTGREY );
 		c.yProperty().bind( background.heightProperty().multiply( 0.5 ) );
 		c.widthProperty().bind( background.widthProperty().multiply( 0.5 ) );
-		c.heightProperty().bind( background.heightProperty().multiply( 0.5 ) );
 		d.setFill( Color.DARKGRAY );
 		d.xProperty().bind( background.widthProperty().multiply( 0.5 ) );
 		d.yProperty().bind( background.heightProperty().multiply( 0.5 ) );
@@ -86,20 +95,38 @@ public class PaintSwatch extends Pane {
 		setPaint( paint );
 	}
 
+	/**
+	 * Get the current paint.
+	 *
+	 * @return The paint, or null if not set.
+	 */
 	public Paint getPaint() {
 		return paint == null ? null : paint.get();
 	}
 
+	/**
+	 * Set the paint for this swatch.
+	 *
+	 * @param paint The paint to set.
+	 */
 	public void setPaint( Paint paint ) {
 		paintProperty().set( paint );
 		updateSwatch();
 	}
 
+	/**
+	 * Property for the paint of this swatch.
+	 *
+	 * @return The paint property.
+	 */
 	public ObjectProperty<Paint> paintProperty() {
 		if( paint == null ) paint = new SimpleObjectProperty<>();
 		return paint;
 	}
 
+	/**
+	 * Update the visibility of the background and swatch based on the paint.
+	 */
 	private void updateSwatch() {
 		Paint paint = getPaint();
 		swatch.setFill( paint );

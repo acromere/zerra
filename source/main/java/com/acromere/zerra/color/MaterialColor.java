@@ -7,6 +7,9 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.CopyOnWriteArraySet;
 
+/**
+ * A collection of standard material colors.
+ */
 public class MaterialColor {
 
 	public static final Color RED = Color.web( "#F44336" );
@@ -77,15 +80,32 @@ public class MaterialColor {
 		init( BLUE_GRAY, "Blue Gray" );
 	}
 
+	/**
+	 * Initialize the color set and names map.
+	 *
+	 * @param color The color to add.
+	 * @param name The name of the color.
+	 */
 	private static void init( Color color, String name ) {
 		COLORS.add( color );
 		NAMES.put( color, name );
 	}
 
+	/**
+	 * Get all material colors.
+	 *
+	 * @return A set of all material colors.
+	 */
 	public static Set<Color> getColors() {
 		return COLORS;
 	}
 
+	/**
+	 * Get the name of a material color.
+	 *
+	 * @param color The color to get the name for.
+	 * @return The name of the color, or null if not found.
+	 */
 	public static String getName( Color color ) {
 		return NAMES.get( color );
 	}
