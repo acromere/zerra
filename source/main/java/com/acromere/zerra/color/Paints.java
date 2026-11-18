@@ -10,6 +10,9 @@ import javafx.scene.paint.RadialGradient;
  */
 public class Paints {
 
+	/**
+	 * Prevent instantiation of this utility class.
+	 */
 	private Paints() {}
 
 	/**
