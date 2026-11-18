@@ -17,12 +17,33 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Proof methods for images and icons
+ * Utility methods that produce visual "proofs" of images and icons by
+ * rendering them into a new {@link javafx.stage.Stage} window.
+ *
+ * <p>A proof is a side-by-side preview of a {@link VectorImage} rendered at
+ * several sizes on both the
+ * {@link com.acromere.zerra.theme.Theme#DARK} and
+ * {@link com.acromere.zerra.theme.Theme#LIGHT} backgrounds, which is useful for
+ * inspecting how an icon looks at small sizes and against different themes.</p>
+ *
+ * @see javafx.stage.Stage
+ * @see VectorImage
  */
 public class Proof {
 
 	private static final Color FILL = Color.GRAY;
 
+	/**
+	 * Proves the given node, choosing the appropriate proof method based on its
+	 * type.
+	 *
+	 * <p>If the node is an {@link IconTag} it is proved as an icon; otherwise it
+	 * is proved as a {@link javafx.scene.canvas.Canvas} image.</p>
+	 *
+	 * @param node the node to prove
+	 * @see #proof(Canvas, double, double, Paint)
+	 * @see #proof(Canvas, Color, Color)
+	 */
 	public static void proof( Canvas node ) {
 		if( node instanceof IconTag ) {
 			proof( node, null, null );
@@ -31,15 +52,53 @@ public class Proof {
 		}
 	}
 
+	/**
+	 * Proves the given {@link javafx.scene.canvas.Canvas} image at its natural
+	 * size, filling any transparent regions with the supplied background
+	 * {@link Paint}.
+	 *
+	 * @param node the {@link javafx.scene.canvas.Canvas} to prove
+	 * @param fill the background {@link Paint} used to fill transparent regions;
+	 *             may be {@code null}
+	 * @see #proof(Canvas, double, double, Paint)
+	 */
 	public static void proof( Canvas node, Paint fill ) {
 		proof( node, node.getWidth(), node.getHeight(), fill );
 	}
 
+	/**
+	 * Proves the given {@link javafx.scene.canvas.Canvas} image at the specified
+	 * dimensions, filling any transparent regions with the supplied background
+	 * {@link Paint}.
+	 *
+	 * <p>This is the core proof method for images; the {@link #proof(Canvas)} and
+	 * {@link #proof(Canvas, Paint)} convenience overloads delegate here.</p>
+	 *
+	 * @param node the {@link javafx.scene.canvas.Canvas} to prove
+	 * @param width the image width
+	 * @param height the image height
+	 * @param fill the background {@link Paint} used to fill transparent regions;
+	 *             may be {@code null}
+	 */
 	public static void proof( Canvas node, double width, double height, Paint fill ) {
 		FxStarter.startAndWait( 1000 );
 		Fx.run( () -> proofImage( node, width, height, fill ) );
 	}
 
+	/**
+	 * Proves the given {@link IconTag} as an icon, rendering it against the
+	 * {@link com.acromere.zerra.theme.Theme#DARK} and
+	 * {@link com.acromere.zerra.theme.Theme#LIGHT} backgrounds.
+	 *
+	 * <p>Each fill color may be {@code null}, in which case a default gray
+	 * background is used for the corresponding theme.</p>
+	 *
+	 * @param node the {@link IconTag} to prove
+	 * @param darkFill the background {@link Color} for the dark theme; may be
+	 *                 {@code null}
+	 * @param lightFill the background {@link Color} for the light theme; may be
+	 *                  {@code null}
+	 */
 	public static void proof( Canvas node, Color darkFill, Color lightFill ) {
 		FxStarter.startAndWait( 1000 );
 		Fx.run( () -> proofIcon( (VectorImage)node, darkFill, lightFill ) );

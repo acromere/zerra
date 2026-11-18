@@ -14,8 +14,30 @@ import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 
+/**
+ * Utility class for producing and transforming {@link Image images} from
+ * {@link VectorImage vector icons}.
+ *
+ * <p>Provides pixel scaling, stage-icon generation at multiple sizes, and
+ * helpers for wrapping a rendered {@link Canvas} in a {@link Scene} for export
+ * or preview.</p>
+ *
+ * @see VectorImage
+ * @see javafx.scene.image.Image
+ */
 public class Images {
 
+	/**
+	 * Resamples an {@link Image} to a new size using nearest-neighbor scaling.
+	 *
+	 * <p>Each source pixel is replicated into a {@code scale} x {@code scale}
+	 * block, preserving crisp edges without interpolation.</p>
+	 *
+	 * @param input the source image
+	 * @param scale the integer scaling factor; the output is
+	 *        {@code scale} times the input width and height
+	 * @return a new {@link WritableImage} with the scaled dimensions
+	 */
 	public static Image resample( Image input, int scale ) {
 		int w = (int)input.getWidth();
 		int h = (int)input.getHeight();
@@ -39,10 +61,30 @@ public class Images {
 		return output;
 	}
 
+	/**
+	 * Returns a default set of stage icons for the given image.
+	 *
+	 * <p>Delegates to {@link #getStageIcons(VectorImage, int...)} with the
+	 * standard sizes 16, 24, 32, 48, 64, 128, and 256.</p>
+	 *
+	 * @param image the source image; if {@code null}, a
+	 *        {@link BrokenIcon} is used for each size
+	 * @return an array of {@link Image} instances at the standard sizes
+	 * @see #getStageIcons(VectorImage, int...)
+	 */
 	public static Image[] getStageIcons( VectorImage image ) {
 		return getStageIcons( image, 16, 24, 32, 48, 64, 128, 256 );
 	}
 
+	/**
+	 * Produces stage icons at each of the given pixel sizes.
+	 *
+	 * @param image the source image; if {@code null}, a
+	 *        {@link BrokenIcon} is used for each size
+	 * @param sizes the pixel sizes for the resulting icons
+	 * @return an array of {@link Image} instances, one per requested size
+	 * @see #getStageIcons(VectorImage)
+	 */
 	public static Image[] getStageIcons( VectorImage image, int... sizes ) {
 		Image[] images = new Image[ sizes.length ];
 		for( int index = 0; index < sizes.length; index++ ) {
@@ -52,6 +94,21 @@ public class Images {
 		return images;
 	}
 
+	/**
+	 * Wraps a rendered {@link Canvas} in a {@link Scene} for export or preview.
+	 *
+	 * <p>If the canvas is a {@link VectorImage}, its theme is re-applied. The
+	 * canvas is placed in a {@link Pane} with an empty background and the
+	 * container stylesheets are applied via
+	 * {@link #applyContainerStylesheets(Canvas, Parent)}.</p>
+	 *
+	 * @param canvas the canvas to wrap
+	 * @param imageWidth the preferred width of the wrapping pane
+	 * @param imageHeight the preferred height of the wrapping pane
+	 * @param fill the scene fill; a {@code null} value yields a transparent fill
+	 * @return a {@link Scene} containing the canvas
+	 * @see #applyContainerStylesheets(Canvas, Parent)
+	 */
 	static Scene getImageScene( Canvas canvas, double imageWidth, double imageHeight, Paint fill ) {
 		if( canvas instanceof VectorImage image ) applyTheme( image, image.getTheme() );
 		Pane pane = new Pane( canvas );
@@ -63,6 +120,17 @@ public class Images {
 		return scene;
 	}
 
+	/**
+	 * Applies the default container stylesheet to a node, along with any
+	 * container-style property stored on the canvas.
+	 *
+	 * <p>Adds {@link Stylesheet#ZERRA} to the node's stylesheets and, when the
+	 * canvas carries a {@code "container-style"} property, sets it as the node's
+	 * style.</p>
+	 *
+	 * @param image the canvas whose container-style property is consulted
+	 * @param node the node that receives the stylesheet
+	 */
 	static void applyContainerStylesheets( Canvas image, Parent node ) {
 		// Add the default container stylesheet
 		node.getStylesheets().add( Stylesheet.ZERRA );

@@ -10,6 +10,28 @@ import javafx.scene.text.*;
 
 import java.util.List;
 
+/**
+ * Abstract base for image-backed {@link VectorImage} icons.
+ * <p>
+ * A {@code RenderedImage} owns the {@link GraphicsContext} used to paint its content
+ * and delegates the actual drawing to the {@link #render(GraphicsContext, boolean)}
+ * template method, which subclasses override to produce their output. It exposes
+ * the protected drawing context plus a set of convenience helpers
+ * (e.g. {@link #move(double, double)}, {@link #zoom(double, double)},
+ * {@link #spin(double, double)} and {@link #addRect(double, double, double, double)})
+ * that operate on that context, and the {@link #drawImage(Image, double, double, double, double)}
+ * overloads that paint a {@link Image} onto the context.
+ * <p>
+ * Concrete subclasses include {@link BrokenIcon}, {@link ImageIcon}, {@link SvgIcon} and
+ * {@link VectorIcon}.
+ *
+ * @see VectorImage
+ * @see RenderedIcon
+ * @see BrokenIcon
+ * @see ImageIcon
+ * @see SvgIcon
+ * @see VectorIcon
+ */
 public abstract class RenderedImage extends VectorImage {
 
 	protected RenderedImage() {}
