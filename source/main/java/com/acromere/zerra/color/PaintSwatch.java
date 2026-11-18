@@ -14,12 +14,16 @@ import javafx.scene.shape.Rectangle;
  */
 public class PaintSwatch extends Pane {
 
+	/** The checkerboard background shown behind a transparent paint. */
 	private final Pane background;
 
+	/** The "no paint" indicator shown when no paint is set. */
 	private final Pane noPaintSwatch;
 
+	/** The rectangle that displays the current paint. */
 	private final Rectangle swatch;
 
+	/** The paint property backing this swatch. */
 	private ObjectProperty<Paint> paint;
 
 	/**

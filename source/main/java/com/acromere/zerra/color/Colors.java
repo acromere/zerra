@@ -2,6 +2,9 @@ package com.acromere.zerra.color;
 
 import javafx.scene.paint.Color;
 
+/**
+ * Utility class for color manipulation and conversion.
+ */
 public class Colors {
 
 	/*
@@ -11,11 +14,25 @@ public class Colors {
 	 * public static final double BLUE_BRIGHTNESS_FACTOR = 0.0722;
 	 */
 
-	// Per com.sun.javafx.util.Utils.calculateBrightness(Color)
+	/**
+	 * The red channel's factor in the luminance calculation.
+	 *
+	 * <p>Per {@code com.sun.javafx.util.Utils.calculateBrightness(Color)}.</p>
+	 */
 	public static final double RED_BRIGHTNESS_FACTOR = 0.3;
 
+	/**
+	 * The green channel's factor in the luminance calculation.
+	 *
+	 * <p>Per {@code com.sun.javafx.util.Utils.calculateBrightness(Color)}.</p>
+	 */
 	public static final double GREEN_BRIGHTNESS_FACTOR = 0.59;
 
+	/**
+	 * The blue channel's factor in the luminance calculation.
+	 *
+	 * <p>Per {@code com.sun.javafx.util.Utils.calculateBrightness(Color)}.</p>
+	 */
 	public static final double BLUE_BRIGHTNESS_FACTOR = 0.11;
 
 	/**
@@ -113,6 +130,11 @@ public class Colors {
 	/**
 	 * Generate a toned color by mixing the specified color with white (factor
 	 * 1.0) or black (factor -1.0).
+	 *
+	 * @param color The color to tone.
+	 * @param factor The tone factor; values greater than 0 tint toward white,
+	 *               values less than 0 shade toward black.
+	 * @return The toned color.
 	 */
 	public static Color getTone( Color color, double factor ) {
 		//factor = clamp( factor );
@@ -259,6 +281,12 @@ public class Colors {
 		return javafx.scene.paint.Color.rgb( color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha() / 255.0 );
 	}
 
+	/**
+	 * Clamp a double value to the range {@code [0, 1]}.
+	 *
+	 * @param value The value to clamp.
+	 * @return The value, constrained to the range {@code [0, 1]}.
+	 */
 	private static double clamp( double value ) {
 		if( value < 0 ) {
 			value = 0;
@@ -268,6 +296,12 @@ public class Colors {
 		return value;
 	}
 
+	/**
+	 * Clamp a float value to the range {@code [0, 1]}.
+	 *
+	 * @param value The value to clamp.
+	 * @return The value, constrained to the range {@code [0, 1]}.
+	 */
 	@SuppressWarnings( "unused" )
 	private static float clamp( float value ) {
 		if( value < 0 ) {
@@ -278,6 +312,12 @@ public class Colors {
 		return value;
 	}
 
+	/**
+	 * Clamp an integer value to the range {@code [0, 255]}.
+	 *
+	 * @param value The value to clamp.
+	 * @return The value, constrained to the range {@code [0, 255]}.
+	 */
 	@SuppressWarnings( "unused" )
 	private static int clamp( int value ) {
 		if( value < 0 ) {

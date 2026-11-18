@@ -9,8 +9,10 @@ import lombok.Getter;
 @Getter
 public class ColorTheme {
 
+	/** The primary color of this theme. */
 	private final Color primary;
 
+	/** The color complementary to {@link #primary}. */
 	private final Color complement;
 
 	/**
@@ -23,6 +25,13 @@ public class ColorTheme {
 		this.complement = getComplement( color, 180 );
 	}
 
+	/**
+	 * Compute the color complementary to the specified color by rotating its hue.
+	 *
+	 * @param color The color to complement.
+	 * @param offset The hue offset, in HSB degrees, to apply.
+	 * @return The complementary color.
+	 */
 	@SuppressWarnings( "SameParameterValue" )
 	private Color getComplement( Color color, double offset ) {
 		double h = color.getHue();
