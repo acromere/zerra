@@ -17,18 +17,42 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Writes {@link VectorImage} renderers to image and icon files.
+ *
+ * <p>Supports raster formats (such as PNG) and multi-size {@code .ico} icons.
+ * Rendering is delegated to the FX toolkit, which requires the
+ * {@link javafx.application.Platform startup thread}.</p>
+ *
+ * @see VectorImage
+ * @see javafx.embed.swing.SwingFXUtils
+ */
 public class VectorImageWriter {
 
 	private BufferedImage image;
 
 	/**
-	 * @see #save(VectorImage, Path, double, double, Color)
+	 * Saves a single {@link VectorImage} to a file at its natural size.
+	 *
+	 * <p>Delegates to {@link #save(List, Path)} with a single-element list.</p>
+	 *
+	 * @param renderer the image renderer
+	 * @param path the path of the saved image
+	 * @throws Exception if an error occurs
+	 * @see #save(List, Path)
 	 */
 	public void save( VectorImage renderer, Path path ) throws Exception {
 		save( List.of( renderer ), path );
 	}
 
 	/**
+	 * Saves a single {@link VectorImage} at the specified dimensions.
+	 *
+	 * @param renderer the image renderer
+	 * @param path the path of the saved image
+	 * @param width the image width
+	 * @param height the image height
+	 * @throws Exception if an error occurs
 	 * @see #save(VectorImage, Path, double, double, Color)
 	 */
 	public void save( VectorImage renderer, Path path, double width, double height ) throws Exception {
@@ -53,6 +77,14 @@ public class VectorImageWriter {
 	}
 
 	/**
+	 * Saves a list of {@link VectorImage} renderers at their natural sizes.
+	 *
+	 * <p>Delegates to {@link #save(List, Path, Color)} with a {@code null}
+	 * background fill.</p>
+	 *
+	 * @param renderers the list of image renderers
+	 * @param path the path of the saved image
+	 * @throws Exception if an error occurs
 	 * @see #save(List, Path, Color)
 	 */
 	public void save( List<VectorImage> renderers, Path path ) throws Exception {

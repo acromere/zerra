@@ -13,6 +13,25 @@ import javafx.scene.transform.Transform;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
+/**
+ * A {@link VectorIcon} defined by a set of {@link IconAction icon actions}.
+ *
+ * <p>
+ * An {@code SvgIcon} is an icon whose appearance is produced by interpreting a
+ * sequence of vector commands rather than a single image resource.
+ *
+ * <p>
+ * The drawing model is expressed through the nested action types
+ * {@link IconAction}, {@link RenderAction}, {@link Fill}, {@link Draw},
+ * {@link Clip}, {@link Xform} and {@link Restore}. A {@code RenderAction}
+ * carries a {@link Fill} together with a {@link Clip} and one or more
+ * {@link Draw} primitives; {@link Xform} supplies a per-action transform and
+ * {@link Restore} resets the current transform.
+ *
+ * @see VectorIcon
+ * @see RenderedIcon
+ */
+
 public class SvgIcon extends VectorIcon {
 
 	public static final double RADIANS_PER_DEGREE = Math.PI / 180.0;
@@ -251,15 +270,11 @@ public class SvgIcon extends VectorIcon {
 		return draw( path, paint, width, cap, join, 0 );
 	}
 
-	public SvgIcon draw(
-		String path, Paint paint, double width, StrokeLineCap cap, StrokeLineJoin join, double dashOffset, double... dashes
-	) {
+	public SvgIcon draw( String path, Paint paint, double width, StrokeLineCap cap, StrokeLineJoin join, double dashOffset, double... dashes ) {
 		return draw( path, null, paint, width, cap, join, dashOffset, dashes );
 	}
 
-	public SvgIcon draw(
-		String path, Font font, Paint paint, double width, StrokeLineCap cap, StrokeLineJoin join, double dashOffset, double... dashes
-	) {
+	public SvgIcon draw( String path, Font font, Paint paint, double width, StrokeLineCap cap, StrokeLineJoin join, double dashOffset, double... dashes ) {
 		if( path != null ) {
 			actions.add( new Draw( path, true, font, paint, width, cap, join, dashOffset, dashes ) );
 		}
@@ -295,15 +310,11 @@ public class SvgIcon extends VectorIcon {
 		return drawText( path, paint, width, cap, join, 0 );
 	}
 
-	public SvgIcon drawText(
-		String path, Paint paint, double width, StrokeLineCap cap, StrokeLineJoin join, double dashOffset, double... dashes
-	) {
+	public SvgIcon drawText( String path, Paint paint, double width, StrokeLineCap cap, StrokeLineJoin join, double dashOffset, double... dashes ) {
 		return drawText( path, null, paint, width, cap, join, dashOffset, dashes );
 	}
 
-	public SvgIcon drawText(
-		String path, Font font, Paint paint, double width, StrokeLineCap cap, StrokeLineJoin join, double dashOffset, double... dashes
-	) {
+	public SvgIcon drawText( String path, Font font, Paint paint, double width, StrokeLineCap cap, StrokeLineJoin join, double dashOffset, double... dashes ) {
 		if( path != null ) {
 			actions.add( new Draw( path, false, font, paint, width, cap, join, dashOffset, dashes ) );
 		}
@@ -491,9 +502,7 @@ public class SvgIcon extends VectorIcon {
 
 		private final double[] dashes;
 
-		public Draw(
-			String path, boolean isSvg, Font font, Paint paint, double width, StrokeLineCap cap, StrokeLineJoin join, double dashOffset, double... dashes
-		) {
+		public Draw( String path, boolean isSvg, Font font, Paint paint, double width, StrokeLineCap cap, StrokeLineJoin join, double dashOffset, double... dashes ) {
 			super( path, isSvg, paint );
 			this.font = font;
 			this.width = width;
