@@ -41,14 +41,19 @@ import java.util.List;
 @CustomLog
 public abstract class VectorImage extends Canvas {
 
+	/** The default size of a {@code VectorImage}, in pixels. */
 	public static final double DEFAULT_SIZE = 256;
 
+	/** The default grid dimension used when no grid is supplied. */
 	public static final double DEFAULT_GRID = 32;
 
+	/** The default stroke width. */
 	public static final double DEFAULT_STROKE_WIDTH = 4.0;
 
+	/** The default stroke line cap. */
 	public static final StrokeLineCap DEFAULT_STROKE_CAP = StrokeLineCap.ROUND;
 
+	/** The default stroke line join. */
 	public static final StrokeLineJoin DEFAULT_STROKE_JOIN = StrokeLineJoin.ROUND;
 
 	private static final List<CssMetaData<? extends Styleable, ?>> STYLEABLES;
@@ -158,38 +163,53 @@ public abstract class VectorImage extends Canvas {
 		STYLEABLES = List.of( CSS_STROKE_WIDTH, CSS_STROKE_PAINT, CSS_PRIMARY_PAINT, CSS_SECONDARY_PAINT, CSS_FONT );
 	}
 
+	/** The graphics context override, or null to use the inherited context. */
 	private GraphicsContext graphicsContextOverride;
 
+	/** The base transform applied between the design grid and the canvas size. */
 	private Transform baseTransform = new Affine();
 
+	/** The lazily-created stroke width property, or null until first requested. */
 	private DoubleProperty strokeWidth;
 
+	/** The stroke width override, or null to use the styleable property. */
 	private Double strokeWidthOverride;
 
+	/** The lazily-created stroke paint property, or null until first requested. */
 	private ObjectProperty<Paint> strokePaint;
 
+	/** The stroke paint override, or null to use the styleable property. */
 	private Paint strokePaintOverride;
 
+	/** The lazily-created primary paint property, or null until first requested. */
 	private ObjectProperty<Paint> primaryPaint;
 
+	/** The primary paint override, or null to use the styleable property. */
 	private Paint primaryPaintOverride;
 
+	/** The lazily-created secondary paint property, or null until first requested. */
 	private ObjectProperty<Paint> secondaryPaint;
 
+	/** The secondary paint override, or null to use the styleable property. */
 	private Paint secondaryPaintOverride;
 
+	/** The lazily-created font property, or null until first requested. */
 	private ObjectProperty<Font> font;
 
+	/** The font override, or null to use the styleable property. */
 	private Font fontOverride;
 
+	/** The x dimension of the design grid. */
 	@Setter
 	@Getter
 	private double gridX;
 
+	/** The y dimension of the design grid. */
 	@Getter
 	@Setter
 	private double gridY;
 
+	/** The theme that supplies this image's colors. */
 	@Setter
 	@Getter
 	private Theme theme;
@@ -259,6 +279,12 @@ public abstract class VectorImage extends Canvas {
 		getGraphicsContext2D().setTransform( new Affine( baseTransform ) );
 	}
 
+	/**
+	 * Returns the CSS metadata supported by this class, delegating to
+	 * {@link #getClassCssMetaData()}.
+	 *
+	 * @return the class CSS metadata
+	 */
 	@Override
 	public List<CssMetaData<? extends Styleable, ?>> getCssMetaData() {
 		return getClassCssMetaData();
@@ -398,6 +424,12 @@ public abstract class VectorImage extends Canvas {
 		secondaryPaintOverride = paint;
 	}
 
+	/**
+	 * Returns the lazily-created, styleable property that backs the secondary
+	 * paint.
+	 *
+	 * @return the secondary paint property
+	 */
 	public ObjectProperty<Paint> secondaryPaintProperty() {
 		if( secondaryPaint == null ) {
 			secondaryPaint = new SimpleStyleableObjectProperty<>( CSS_SECONDARY_PAINT, VectorImage.this, "secondaryPaint", DEFAULT_SECONDARY_PAINT ) {
@@ -509,6 +541,12 @@ public abstract class VectorImage extends Canvas {
 		return (T)this;
 	}
 
+	/**
+	 * Sets this image's width and height to the given values.
+	 *
+	 * @param width  the new width
+	 * @param height the new height
+	 */
 	@Override
 	public void resize( double width, double height ) {
 		setWidth( width );
@@ -589,12 +627,21 @@ public abstract class VectorImage extends Canvas {
 		applyTheme();
 	}
 
+	/**
+	 * Applies the current theme's text background color to this image's style.
+	 */
 	private void applyTheme() {
 		String style = removeTheme();
 		Theme theme = this.theme == null ? Theme.DARK : this.theme;
 		setStyle( style == null ? theme.getFxTextBackgroundColor() : style + theme.getFxTextBackgroundColor() );
 	}
 
+	/**
+	 * Removes every theme's text background color from this image's style,
+	 * applies the resulting style, and returns it.
+	 *
+	 * @return the style with the theme color removed, or null
+	 */
 	private String removeTheme() {
 		String style = getStyle();
 		for( Theme t : Theme.values() ) {

@@ -6,21 +6,31 @@ import lombok.Getter;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-@Getter
 /**
  * An {@link RenderedIcon} backed by a {@link javafx.scene.image.Image} loaded from a URL.
  * <p>
  * The icon renders a remotely fetched image, scaled to the icon's width and height, and
  * caches the loaded images by URL and size.
  */
+@Getter
 public class ImageIcon extends RenderedIcon {
 
+	/** The cache of images loaded from a URL, keyed by URL and requested size. */
 	private static final Map<String, Image> CACHE = new ConcurrentHashMap<>();
 
+	/** The URL from which this icon loads its image. */
 	private String url;
 
+	/**
+	 * Creates an icon with no source URL.
+	 */
 	public ImageIcon() {}
 
+	/**
+	 * Creates an icon that loads its image from the given URL.
+	 *
+	 * @param url the image URL
+	 */
 	public ImageIcon( String url ) {
 		setUrl( url );
 	}
@@ -74,6 +84,13 @@ public class ImageIcon extends RenderedIcon {
 		return () -> getImageFromUrl( url );
 	}
 
+	/**
+	 * Returns the cached image loaded from the given URL at this icon's size,
+	 * creating and caching it on first request.
+	 *
+	 * @param url the image URL
+	 * @return the image cached for the URL and this icon's size
+	 */
 	private Image getImageFromUrl( String url ) {
 		int w = (int)getWidth();
 		int h = (int)getHeight();

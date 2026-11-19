@@ -140,11 +140,24 @@ public class Images {
 		if( style != null ) node.setStyle( style );
 	}
 
+	/**
+	 * Applies the given theme's text background color to the node's style.
+	 *
+	 * @param node  the image to apply the theme to
+	 * @param theme the theme to apply
+	 */
 	private static void applyTheme( VectorImage node, Theme theme ) {
 		String style = removeTheme( node );
 		node.setStyle( style == null ? theme.getFxTextBackgroundColor() : style + theme.getFxTextBackgroundColor() );
 	}
 
+	/**
+	 * Removes every theme's text background color from the node's style,
+	 * applies the resulting style, and returns it.
+	 *
+	 * @param node the node to remove the theme color from
+	 * @return the style with the theme color removed, or null
+	 */
 	private static String removeTheme( Canvas node ) {
 		String style = node.getStyle();
 		for( Theme t : Theme.values() ) {

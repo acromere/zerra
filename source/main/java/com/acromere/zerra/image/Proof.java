@@ -31,6 +31,7 @@ import java.util.List;
  */
 public class Proof {
 
+	/** The default fill used for the proof's background panes. */
 	private static final Color FILL = Color.GRAY;
 
 	/**
@@ -104,6 +105,14 @@ public class Proof {
 		Fx.run( () -> proofIcon( (VectorImage)node, darkFill, lightFill ) );
 	}
 
+	/**
+	 * Opens a stage showing the given canvas image at the given size.
+	 *
+	 * @param node   the canvas to prove
+	 * @param width  the image width
+	 * @param height the image height
+	 * @param fill   the background fill, or null for a transparent fill
+	 */
 	private static void proofImage( Canvas node, double width, double height, Paint fill ) {
 		Stage stage = new Stage();
 		stage.setTitle( node.getClass().getSimpleName() );
@@ -115,6 +124,14 @@ public class Proof {
 		stage.show();
 	}
 
+	/**
+	 * Opens a stage showing the given icon on the dark and light theme
+	 * backgrounds, alongside a set of progressively smaller stage icons.
+	 *
+	 * @param icon      the icon to prove
+	 * @param darkFill  the fill for the dark theme, or null for the default
+	 * @param lightFill the fill for the light theme, or null for the default
+	 */
 	private static void proofIcon( VectorImage icon, Color darkFill, Color lightFill ) {
 		Pane darkPane = proofPane( icon.copy(), Theme.DARK, darkFill == null ? Color.web( "#404040" ) : darkFill );
 		Pane lightPane = proofPane( icon.copy(), Theme.LIGHT, lightFill == null ? Color.web( "#C0C0C0" ) : lightFill );
@@ -141,6 +158,15 @@ public class Proof {
 		stage.show();
 	}
 
+	/**
+	 * Builds a pane showing the given icon on the given theme and fill,
+	 * alongside a set of progressively smaller versions of the icon.
+	 *
+	 * @param icon  the icon to show
+	 * @param theme the theme to apply to the icon
+	 * @param fill  the fill for the pane's background
+	 * @return the populated pane
+	 */
 	private static Pane proofPane( VectorImage icon, Theme theme, Color fill ) {
 		icon.setAndApplyTheme( theme );
 

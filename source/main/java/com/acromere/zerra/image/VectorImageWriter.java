@@ -29,6 +29,7 @@ import java.util.List;
  */
 public class VectorImageWriter {
 
+	/** The most recently created AWT image. */
 	private BufferedImage image;
 
 	/**
@@ -109,6 +110,14 @@ public class VectorImageWriter {
 		saveAwtImages( images, path );
 	}
 
+	/**
+	 * Writes the given AWT images to the path, choosing the writer by file
+	 * extension.
+	 *
+	 * @param images the images to write
+	 * @param path   the path of the saved image
+	 * @throws Exception if an error occurs
+	 */
 	private void saveAwtImages( List<BufferedImage> images, Path path ) throws Exception {
 		Path parent = path.getParent();
 		if( !Files.exists( parent ) ) Files.createDirectories( parent );
@@ -125,6 +134,17 @@ public class VectorImageWriter {
 		}
 	}
 
+	/**
+	 * Renders the given renderer to an AWT image on the FX toolkit, falling
+	 * back to the platform startup thread when it is not yet running.
+	 *
+	 * @param renderer the image renderer
+	 * @param width    the image width
+	 * @param height   the image height
+	 * @param fill     the background fill color, or null for a transparent fill
+	 * @return the rendered AWT image
+	 * @throws Exception if an error occurs
+	 */
 	private BufferedImage createAwtImage( VectorImage renderer, double width, double height, Color fill ) throws Exception {
 		String style = "";
 		if( fill != null ) style += "-fx-background-color: " + Colors.toString( fill ) + ";";
@@ -141,6 +161,15 @@ public class VectorImageWriter {
 		return this.image;
 	}
 
+	/**
+	 * Creates the AWT image on the FX thread by converting the renderer's
+	 * snapshot into a {@link BufferedImage}.
+	 *
+	 * @param renderer the image renderer
+	 * @param width    the image width
+	 * @param height   the image height
+	 * @param fill     the background fill color, or null for a transparent fill
+	 */
 	private void doCreateAwtImageFx( VectorImage renderer, double width, double height, Color fill ) {
 		int type = BufferedImage.TYPE_INT_ARGB;
 		if( fill != null && fill.isOpaque() ) type = BufferedImage.TYPE_INT_RGB;
