@@ -10,18 +10,49 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+/**
+ * Utilities for encoding, decoding, deriving and locating JavaFX fonts.
+ *
+ * <p>A font can be encoded to, and decoded from, a string of the form
+ * {@code "family|style|size"}, in which the style and size components are
+ * optional. The class also derives variants of an existing font and locates the
+ * monospaced fonts installed on the system.</p>
+ */
 @CustomLog
 public final class FontUtil {
 
+	/** The separator used to join the components of an encoded font. */
 	private static final String SEPARATOR = "|";
 
+	/** The cached list of monospaced font family names, or null if not yet computed. */
 	private static List<String> monoFontFamilyList;
 
+	/**
+	 * Encode a font to its string representation.
+	 *
+	 * <p>The representation is the family, style and size of the font, separated
+	 * by the {@link #SEPARATOR} character. For example, a bold 18 point sans-serif
+	 * font encodes to {@code "SansSerif|Bold|18.0"}.</p>
+	 *
+	 * @param font The font to encode, or null
+	 * @return The string representation of the font, or null if the font is null
+	 */
 	public static String encode( Font font ) {
 		if( font == null ) return null;
 		return font.getFamily() + SEPARATOR + font.getStyle() + SEPARATOR + font.getSize();
 	}
 
+	/**
+	 * Decode a font from its string representation.
+	 *
+	 * <p>The representation is the family, style and size of the font, separated
+	 * by the {@link #SEPARATOR} character. The style and size components are
+	 * optional; for example, {@code "SansSerif"} decodes to a regular font of the
+	 * default size.</p>
+	 *
+	 * @param string The string to decode, or null
+	 * @return The decoded font, or null if the string is null
+	 */
 	public static Font decode( String string ) {
 		if( string == null ) return null;
 
@@ -118,11 +149,29 @@ public final class FontUtil {
 		return monoFontFamilyList = Collections.unmodifiableList( monoFamilyList );
 	}
 
+	/**
+	 * Derive a variant of a font with a different size.
+	 *
+	 * @param font The font to derive from
+	 * @param size The size of the derived font
+	 * @return A font with the same family, weight and posture as the given font,
+	 *     but the specified size
+	 */
 	public static Font derive( Font font, double size ) {
 		String style = font.getStyle();
 		return Font.font( font.getFamily(), getFontWeight( style ), getFontPosture( style ), size );
 	}
 
+	/**
+	 * Derive a variant of a font with a different weight, posture and size.
+	 *
+	 * @param font The font to derive from
+	 * @param weight The weight of the derived font
+	 * @param posture The posture of the derived font
+	 * @param size The size of the derived font
+	 * @return A font with the family of the given font and the specified weight,
+	 *     posture and size
+	 */
 	@SuppressWarnings( "unused" )
 	public static Font derive( Font font, FontWeight weight, FontPosture posture, double size ) {
 		return Font.font( font.getFamily(), weight, posture, size );
