@@ -4,15 +4,21 @@
 # https://docs.github.com/code-security/dependabot/dependabot-version-updates/configuration-options-for-the-dependabot.yml-file
 
 version: 2
+registries:
+  acromere:
+    type: maven-repository
+    url: https://repo.acromere.com
 updates:
   - package-ecosystem: "github-actions" # See documentation for possible values
     directory: "/" # Location of package manifests
     schedule:
       interval: "weekly"
   - package-ecosystem: "maven" # See documentation for possible values
+    registries:
+      - acromere
     directory: "/" # Location of package manifests
     schedule:
       interval: "weekly"
     ignore:
       - dependency-name: "javafx*"
-        versions: ["[25-ea+1,25.0.0)","[26-ea+1,26.0.0)","[27-ea+1,27.0.0)"]
+        versions: ["[25-ea+1,25.0.0)","[26-ea+1,26.0.0)","[27-ea+1,27.0.0)","[28-ea+1,28.0.0)"]
